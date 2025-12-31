@@ -153,7 +153,7 @@ class AP:
             return ''.join((random.choice('abcdefghijklmnopqrstuvwxyz0123456789')) for _ in range(length))
         
         def SR(number, country_code, proxies_list):
-            api_url = 'https://api.example.com/send'  # URL placeholder
+            api_url = 'https://api.whatsapp.com/send'  # URL placeholder
             
             messages = {
                 '62': ['🌟 *SITUS JUDI ONLINE TERPERCAYA & TERVERIFIKASI* 🌟\n\n✅ Lisensi Resmi Internasional\n✅ Sistem Keamanan Terenkripsi\n✅ Proses Deposit & Withdraw Cepat\n✅ Customer Service 24/7 Professional\n\n🎰 *JACKPOT HINGGA 200 JUTA!* 🎰\nDengan deposit minimal 50rb, kesempatan menang besar terbuka lebar!\n\n📱 *HUBUNGI ADMIN DI WHATSAPP:*\n[+62{number}]\n\n🔒 *Terjamin Keamanannya & Terpercaya Sejak 2018* 🔒',
